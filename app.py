@@ -28,6 +28,11 @@ def get_recipes():
         meals = recipes.get_recipes()
     return jsonify(meals), 200
 
+@app.route('/recipes/<recipe_id>', methods=['GET'])
+def get_recipe(recipe_id):
+    recipe = recipes.get_recipe(recipe_id)
+    return jsonify(recipe), 200
+
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
     return {'message': f'Error occurred: {err}'}, 404
