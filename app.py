@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes #type: ignore
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -20,10 +19,13 @@ def new_recipe():
 @app.route('/recipes/', methods=['GET'])
 def get_recipes():
     query = request.query_string.decode()
-    dietary_reqs = query.split('&')
-    diet_filter = [{req.split('=')[0]: req.split('=')[1]} for req in dietary_reqs]
-    print(diet_filter)
-    meals = recipes.get_recipes()
+    if query:
+        dietary_reqs = query.split('&')
+        diet_filter = {"diet_req": [req for req in dietary_reqs]}
+        print(diet_filter)
+        meals = recipes.get_recipes(diet_filter)
+    else:
+        meals = recipes.get_recipes()
     return jsonify(meals), 200
 
 @app.errorhandler(exceptions.NotFound)
