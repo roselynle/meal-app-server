@@ -1,10 +1,10 @@
 from pymongo import MongoClient # type: ignore
-import pprint
 
-client = MongoClient(username='user', password='password')
+def connect_to_meals():
+    client = MongoClient(username='user', password='password')
+    db = client.foodApp
+    return db.Meal
 
-db = client.foodApp
-
-recipes = db.Meal
-
-pprint.pprint(recipes.find_one())
+def add_recipe(recipe):
+    recipes = connect_to_meals()
+    recipes.insert_one(recipe)
