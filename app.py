@@ -19,9 +19,11 @@ def new_recipe():
 
 @app.route('/recipes/', methods=['GET'])
 def get_recipes():
-    query = request.query_string
-    meals = recipes.get_recipes(query)
-    print(meals)
+    query = request.query_string.decode()
+    dietary_reqs = query.split('&')
+    diet_filter = [{req.split('=')[0]: req.split('=')[1]} for req in dietary_reqs]
+    print(diet_filter)
+    meals = recipes.get_recipes()
     return jsonify(meals), 200
 
 @app.errorhandler(exceptions.NotFound)
