@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes #type: ignore
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -17,13 +18,19 @@ def new_recipe():
     return {'message': "New recipe added"}, 201
 
 @app.route('/recipes/', methods=['GET'])
-def new_recipe():
+def get_recipes():
     query = request.query_string
-    return jsonify(recipes.get_recipes(query)), 200
+    meals = recipes.get_recipes(query)
+    print(meals)
+    return jsonify(meals), 200
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
     return {'message': f'Error occurred: {err}'}, 404
+
+@app.errorhandler(exceptions.InternalServerError)
+def handle_500(err):
+    return {'message': f'Error occurred: {err}'}, 500
 
 
 if __name__ == "__main__":
