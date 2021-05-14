@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from werkzeug import exceptions # type: ignore
+import recipes # type: ignore
 
 app = Flask(__name__)
 CORS(app)
