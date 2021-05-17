@@ -8,7 +8,12 @@ def connect_to_meals():
 
 def add_recipe(recipe):
     recipes = connect_to_meals()
-    recipes.insert_one(recipe)
+    diet_reqs = []
+    for key, value in recipe["dietary-req"]:
+        if value:
+            diet_reqs.append(key.lower())
+    db_recipe = {"title": recipe["recipeName"], "description": recipe["recipeDescription"], "ingredients": recipe["ingredients"], "instructions": recipe["Instructions"], "diet_req": diet_reqs}
+    recipes.insert_one(db_recipe)
 
 def get_recipes(query=None):
     recipes = connect_to_meals()
