@@ -25,13 +25,16 @@ def test_api_get_recipes_query(api):
     assert res.status == '200 OK'
 
 def test_api_get_recipes_id(api):
-    query = "gluten"
-    res = api.get('/recipes/?' + query)
-    assert len(res.json) == 1
-    assert res.json[0]["title"] == "Pasta"
+    res = api.get('/recipes/60a247128266aadf8cd4853e')
+    assert res.json["title"] == "Pasta"
     assert res.status == '200 OK'
 
 def test_api_404(api):
     res = api.get('/incorrect_route')
     assert 'Error occurred' in res.json['message']
     assert res.status == '404 NOT FOUND'
+
+def test_api_500(api):
+    res = api.get('/recipes/60')
+    assert 'Error occurred' in res.json['message']
+    assert res.status == '500 INTERNAL SERVER ERROR'
