@@ -4,7 +4,10 @@ from werkzeug import exceptions # type: ignore
 from models import recipes #type: ignore
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
+
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -16,7 +19,8 @@ def home():
 @app.route('/recipes/new/', methods=['POST'])
 @cross_origin()
 def new_recipe():
-    new_meal = request.data
+    new_meal = request.data.decode()
+    print(new_meal)
     recipes.add_recipe(new_meal)
     return {'message': "New recipe added"}, 201
 
