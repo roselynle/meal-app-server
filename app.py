@@ -9,7 +9,10 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 @app.route('/', methods=['GET'])
+@cross_origin()
 def home():
     return jsonify({'message': 'Hello from Community Cook API!'}), 200
 
@@ -22,6 +25,7 @@ def new_recipe():
     return {'message': "New recipe added"}, 201
 
 @app.route('/recipes/', methods=['GET'])
+@cross_origin()
 def get_recipes():
     query = request.query_string.decode()
     if query:
@@ -34,6 +38,7 @@ def get_recipes():
     return jsonify(meals), 200
 
 @app.route('/recipes/<recipe_id>', methods=['GET'])
+@cross_origin()
 def get_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
     return jsonify(recipe), 200

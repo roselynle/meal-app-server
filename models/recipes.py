@@ -1,7 +1,7 @@
 from bson.objectid import ObjectId #type: ignore
 from pymongo import MongoClient # type: ignore
 import json
-import ast
+
 
 def connect_to_meals():
     client = MongoClient(username='user', password='password')
@@ -11,6 +11,7 @@ def connect_to_meals():
 def add_recipe(recipe):
     recipes = connect_to_meals()
     recipe = json.loads(recipe)
+
     # print(recipe)
     diet_reqs = []
     for diet_req in recipe["dietary-req"]:
@@ -19,6 +20,7 @@ def add_recipe(recipe):
             if value:
                 diet_reqs.append(key.lower())
     db_recipe = {"title": recipe["recipeName"], "description": recipe["recipeDescription"], "ingredients": recipe["ingredients"], "instructions": recipe["instructions"], "diet_req": diet_reqs}
+
     recipes.insert_one(db_recipe)
 
 def get_recipes(query=None):
