@@ -17,6 +17,20 @@ def test_api_get_recipes(api):
     assert res.json[0]["title"] == "test pasta"
     assert res.status == '200 OK'
 
+def test_api_get_recipes_query(api):
+    query = "gluten"
+    res = api.get('/recipes/?' + query)
+    assert len(res.json) == 1
+    assert res.json[0]["title"] == "Pasta"
+    assert res.status == '200 OK'
+
+def test_api_get_recipes_id(api):
+    query = "gluten"
+    res = api.get('/recipes/?' + query)
+    assert len(res.json) == 1
+    assert res.json[0]["title"] == "Pasta"
+    assert res.status == '200 OK'
+
 def test_api_404(api):
     res = api.get('/incorrect_route')
     assert 'Error occurred' in res.json['message']
