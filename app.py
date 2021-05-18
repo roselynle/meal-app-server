@@ -8,8 +8,12 @@ cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
+client = MongoClient(connect_string)
+db = client.get_default_database()
 
-app.config['CORS_HEADERS'] = 'Content-Type'
+# def get_mongo_connect_string():
+#     return os.environ.get("MONGO_CONNECT_STRING", "")
 
 @app.route('/', methods=['GET'])
 @cross_origin()
