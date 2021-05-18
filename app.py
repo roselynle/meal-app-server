@@ -41,7 +41,6 @@ def home():
 @cross_origin()
 def new_recipe():
     new_meal = request.data.decode()
-    print(new_meal)
     recipes.add_recipe(new_meal)
     return {'message': "New recipe added"}, 201
 
@@ -52,7 +51,6 @@ def get_recipes():
     if query:
         dietary_reqs = query.split('&')
         diet_filter = {"diet_req": [req for req in dietary_reqs]}
-        print(diet_filter)
         meals = recipes.get_recipes(diet_filter)
     else:
         meals = recipes.get_recipes()
@@ -103,8 +101,6 @@ def get_meal_plan(user_id):
     for meal in plan:
         meal = recipes.get_recipe(meal)
         meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
-    print(meals)
-    print(jsonify(meals).json)
     return jsonify(meals), 200
 
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
@@ -114,6 +110,21 @@ def new_meal_plan(user_id):
     users.new_meal_plan(user_id, plan_data)
     return {'message': "meal plan updated"}, 201
 
+@app.route('/user/<user_id>/mealplan/ingredients', methods=['GET'])
+@cross_origin()
+def get_ingredients(user_id):
+    plan = users.get_meal_plan(user_id)
+    ingredients = {}
+    for meal in plan:
+        meal = recipes.get_recipe(meal)
+        meal_ingredients = {}
+        for ingredient in meal["ingredients"]:
+            try:
+                meal_ingredients[ingredient["ingredient"] + ': ' + ingredient["measure"]] = float(ingredient["amount"])
+            except:
+                meal_ingredients[ingredient["ingredient"] + ': ' + ingredient["measure"]] = ingredient["amount"]
+        ingredients = {ingredient: ingredients.get(ingredient, 0) + meal_ingredients.get(ingredient, 0) for ingredient in set(ingredients) | set(meal_ingredients)}
+    return {'message': "ingredients sent"}, 200
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
