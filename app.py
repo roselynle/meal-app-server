@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS, cross_origin # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -48,8 +49,14 @@ def register_user():
 @app.route('/login', methods=['POST'])
 def login_user():
     registered_user = request.data
-    users.log_in(registered_user)
-    return {'message': "Login successful"}, 201
+    print (registered_user)
+    user = json.loads(registered_user.decode())
+    success = users.log_in(user)
+    print(success)
+    if (success == True):
+        return {'message': "Login successful"}, 201
+    else:
+        return {'err': "Login unsuccessful"}, 500
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
