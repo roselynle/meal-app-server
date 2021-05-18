@@ -118,6 +118,13 @@ def get_meal_plan(user_id):
         meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
     return jsonify(meals), 200
 
+@app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
+@cross_origin()
+def new_meal_plan(user_id):
+    plan_data = json.loads(request.data.decode())
+    users.new_plan(user_id, plan_data)
+    return {'message': "meal plan updated"}, 200
+
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
