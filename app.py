@@ -57,16 +57,26 @@ def get_recipe(recipe_id):
     return jsonify(recipe), 200
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register_user():
     new_user = request.data
     users.create_user(new_user)
     return {'message': "Registration successful"}, 201
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login_user():
     registered_user = request.data
     users.log_in(registered_user)
     return {'message': "Login successful"}, 201
+
+@app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
+@cross_origin()
+def login_user(user_id):
+    recipe_id = request.data
+    users.new_favourite(user_id, recipe_id)
+    return {'message': "Login successful"}, 201
+
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):

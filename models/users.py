@@ -1,6 +1,7 @@
-from flask import request, session, flash
+from bson.objectid import ObjectId #type: ignore
+from flask import request, session, flash # type: ignore
 from pymongo import MongoClient  # type: ignore
-import bcrypt
+import bcrypt # type: ignore
 
 def connect_to_users():
     client = MongoClient(username='user', password='password')
@@ -17,7 +18,7 @@ def create_user(request):
         users.insert_one({
             'email': request.form['email'],
             'username': request.form['username'],
-            'password': hashpass})
+            'password': hashpass, "favourites": []})
         session['username'] =  request.form['username']
     else:
         print("user already exists")
@@ -35,3 +36,7 @@ def log_in(request):
             flash("Password is incorrect, please try again")  
     else:
         flash("Username does not exist")  
+
+def new_favourite(user_id, recipe_id):
+    users = connect_to_users()
+    users.update_one({'_id': ObjectId(user_id)}, {"$push": {"favourites": ObjectId(recipe_id)}})
