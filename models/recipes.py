@@ -20,7 +20,7 @@ def add_recipe(recipe):
         for key, value in diet_req.items():
             if value:
                 diet_reqs.append(key.lower())
-    db_recipe = {"title": recipe["recipeName"], "description": recipe["recipeDescription"], "ingredients": recipe["ingredients"], "instructions": recipe["instructions"], "diet_req": diet_reqs}
+    db_recipe = {"title": recipe["recipeName"], "description": recipe["recipeDescription"], "ingredients": recipe["ingredients"], "instructions": recipe["instructions"], "diet_req": diet_reqs, "image_url": recipe["image_url"]}
 
     recipes.insert_one(db_recipe)
 

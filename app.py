@@ -114,6 +114,7 @@ def new_meal_plan(user_id):
 @cross_origin()
 def get_ingredients(user_id):
     plan = users.get_meal_plan(user_id)
+    user = users.get_user(user_id)
     ingredients = {}
     for meal in plan:
         meal = recipes.get_recipe(meal)
@@ -124,6 +125,7 @@ def get_ingredients(user_id):
             except:
                 meal_ingredients[ingredient["ingredient"] + ': ' + ingredient["measure"]] = ingredient["amount"]
         ingredients = {ingredient: ingredients.get(ingredient, 0) + meal_ingredients.get(ingredient, 0) for ingredient in set(ingredients) | set(meal_ingredients)}
+    sorted_ingredients = sorted(ingredients.keys(), key=lambda x:x.lower())
     return {'message': "ingredients sent"}, 200
 
 @app.errorhandler(exceptions.NotFound)
