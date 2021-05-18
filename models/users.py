@@ -35,7 +35,8 @@ def log_in(request):
         if (request['password'] == login_user['password']):
             print("password matches")
             # session['username'] = request.form['username']
-            return True
+            username = login_user['username']
+            return username
         else:
             print("password does not match")
     else:
