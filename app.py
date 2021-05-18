@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS, cross_origin # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes #type: ignore
+from pymongo import MongoClient
 
 app = Flask(__name__)
 cors = CORS(app)
