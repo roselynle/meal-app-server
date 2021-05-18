@@ -80,7 +80,7 @@ def get_favourites(user_id):
     for favourite in favourites:
         meal = recipes.get_recipe(favourite)
         meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
-    return jsonify(meals), 201
+    return jsonify(meals), 200
 
 @app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
 @cross_origin()
@@ -88,7 +88,7 @@ def new_favourite(user_id):
     recipe_id = json.loads(request.data.decode())["recipe_id"]
     print(recipe_id)
     users.new_favourite(user_id, recipe_id)
-    return {'message': "favourites updated"}, 204
+    return {'message': "favourites updated"}, 201
 
 
 @app.errorhandler(exceptions.NotFound)

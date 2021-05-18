@@ -25,8 +25,20 @@ def test_api_get_recipes_query(api):
     assert res.status == '200 OK'
 
 def test_api_get_recipes_id(api):
-    res = api.get('/recipes/60a247128266aadf8cd4853e')
+    res = api.get('/recipes/60a3a76b2cbcf9c375520654')
     assert res.json["title"] == "Pasta"
+    assert res.status == '200 OK'
+
+def test_api_new_favourite(api):
+    mock_data = json.dumps({"recipe_id": "60a3a76b2cbcf9c375520654"})
+    mock_headers = {'Content-Type': 'application/json'}
+    res = api.patch('/user/60a3a76a2cbcf9c375520653/favourites/new', data=mock_data, headers=mock_headers)
+    assert "favourites updated" in res.json["message"]
+    assert res.status == '201 CREATED'
+
+def test_api_get_favourites(api):
+    res = api.get('/user/60a3a76a2cbcf9c375520653/favourites')
+    assert res.json[-1]["title"] == "Pasta"
     assert res.status == '200 OK'
 
 def test_api_404(api):
