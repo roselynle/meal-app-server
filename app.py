@@ -2,16 +2,16 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS, cross_origin # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes #type: ignore
-from pymongo import MongoClient
+# from pymongo import MongoClient
 
 app = Flask(__name__)
 cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
-client = MongoClient(connect_string)
-db = client.get_default_database()
+# connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
+# client = MongoClient(connect_string)
+# db = client.get_default_database()
 
 # def get_mongo_connect_string():
 #     return os.environ.get("MONGO_CONNECT_STRING", "")
