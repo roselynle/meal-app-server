@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin # type: ignore
 from flask_mail import Message, Mail # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -23,11 +24,11 @@ mail = Mail(app)
 @app.route('/', methods=['GET'])
 @cross_origin()
 def home():
-    message = f"Hey there, come check out Lenny\'s new album!"
+    """message = f"Hey there, come check out Lenny\'s new album!"
     subject = 'New Release 🔥'
     msg = Message(recipients=["james.wheadon@yahoo.com"], body=message, sender='CommunityCook', subject=subject)
     print(msg)
-    mail.send(msg)
+    mail.send(msg)"""
     return jsonify({'message': 'Hello from Community Cook API!'}), 200
 
 @app.route('/recipes/new/', methods=['POST'])
@@ -74,16 +75,18 @@ def login_user():
 @cross_origin()
 def get_favourites(user_id):
     favourites = users.get_favourites(user_id)
-    recipes = []
+    meals = []
+    print(favourites)
     for favourite in favourites:
-        recipe = recipes.get_recipe(favourite)
-        recipes.append({"_id": recipe["_id"], "title": recipe["title"], "description": recipe["description"]})
-    return jsonify(recipes), 201
+        meal = recipes.get_recipe(favourite)
+        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
+    return jsonify(meals), 201
 
 @app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
 @cross_origin()
 def new_favourite(user_id):
-    recipe_id = request.data
+    recipe_id = json.loads(request.data.decode())["recipe_id"]
+    print(recipe_id)
     users.new_favourite(user_id, recipe_id)
     return {'message': "favourites updated"}, 204
 
