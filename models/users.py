@@ -39,7 +39,7 @@ def log_in(request):
     else:
         flash("Username does not exist")
 
-def get_email(user_id):
+def get_user(user_id):
     users = connect_to_users()
     return users.find_one({'_id': ObjectId(user_id)})
 

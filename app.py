@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request # type: ignore
+from flask import Flask, jsonify, request, render_template # type: ignore
 from flask_cors import CORS, cross_origin # type: ignore
 from flask_mail import Message, Mail # type: ignore
 from werkzeug import exceptions # type: ignore
@@ -121,11 +121,21 @@ def get_ingredients(user_id):
         meal_ingredients = {}
         for ingredient in meal["ingredients"]:
             try:
-                meal_ingredients[ingredient["ingredient"] + ': ' + ingredient["measure"]] = float(ingredient["amount"])
+                meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = float(ingredient["amount"])
             except:
-                meal_ingredients[ingredient["ingredient"] + ': ' + ingredient["measure"]] = ingredient["amount"]
+                meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = ingredient["amount"]
         ingredients = {ingredient: ingredients.get(ingredient, 0) + meal_ingredients.get(ingredient, 0) for ingredient in set(ingredients) | set(meal_ingredients)}
     sorted_ingredients = sorted(ingredients.keys(), key=lambda x:x.lower())
+    ingredient_list = []
+    for i in sorted_ingredients:
+        amount = ingredients[i]
+        if amount % 1 == 0:
+            amount = int(amount)
+        ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
+    print(ingredient_list)
+    msg = Message("Your Shopping List", sender='PlanEat', recipients = [user["email"]])
+    msg.html = render_template('ingredients.html', user_name=user["username"], ingredients=ingredient_list)
+    mail.send(msg)
     return {'message': "ingredients sent"}, 200
 
 @app.errorhandler(exceptions.NotFound)
