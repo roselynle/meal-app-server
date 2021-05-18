@@ -44,3 +44,7 @@ def get_favourites(user_id):
 def new_favourite(user_id, recipe_id):
     users = connect_to_users()
     users.update_one({'_id': ObjectId(user_id)}, {"$push": {"favourites": recipe_id}})
+
+def get_meal_plan(user_id):
+    users = connect_to_users()
+    return users.find_one({'_id': ObjectId(user_id)})["meal_plan_meals"]

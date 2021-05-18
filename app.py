@@ -90,6 +90,34 @@ def new_favourite(user_id):
     users.new_favourite(user_id, recipe_id)
     return {'message': "favourites updated"}, 201
 
+@app.route('/user/<user_id>/favourites', methods=['GET'])
+@cross_origin()
+def get_favourites(user_id):
+    favourites = users.get_favourites(user_id)
+    meals = []
+    for favourite in favourites:
+        meal = recipes.get_recipe(favourite)
+        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
+    return jsonify(meals), 200
+
+@app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
+@cross_origin()
+def new_favourite(user_id):
+    recipe_id = json.loads(request.data.decode())["recipe_id"]
+    print(recipe_id)
+    users.new_favourite(user_id, recipe_id)
+    return {'message': "favourites updated"}, 201
+
+@app.route('/user/<user_id>/mealplan', methods=['GET'])
+@cross_origin()
+def get_meal_plan(user_id):
+    plan = users.get_plan(user_id)
+    meals = []
+    for meal in plan:
+        meal = recipes.get_recipe(meal)
+        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
+    return jsonify(meals), 200
+
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
