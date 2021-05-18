@@ -3,8 +3,10 @@ from flask import request, session, flash # type: ignore
 from pymongo import MongoClient  # type: ignore
 import bcrypt # type: ignore
 
+mongoDB_username = 'user'
+
 def connect_to_users():
-    client = MongoClient(username='user', password='password')
+    client = MongoClient(username=mongoDB_username, password='password')
     db = client.foodApp
     return db.User
 

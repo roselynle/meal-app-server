@@ -2,8 +2,10 @@ from bson.objectid import ObjectId #type: ignore
 from pymongo import MongoClient # type: ignore
 import json
 
+mongoDB_username = 'user'
+
 def connect_to_meals():
-    client = MongoClient(username='user', password='password')
+    client = MongoClient(username=mongoDB_username, password='password')
     db = client.foodApp
     return db.Meal
 

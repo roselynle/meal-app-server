@@ -1,4 +1,18 @@
+from pymongo import MongoClient # type: ignore
 import json
+
+def connect_to_meals():
+    client = MongoClient(username="test", password='password')
+    db = client.foodApp
+    return db.Meal
+
+def connect_to_users():
+    client = MongoClient(username="test", password='password')
+    db = client.foodApp
+    return db.User
+
+test_meal_id = str(connect_to_meals().find_one()["_id"])
+test_user_id = str(connect_to_users().find_one()["_id"])
 
 def test_api_get_home(api):
     res = api.get('/')
@@ -25,19 +39,19 @@ def test_api_get_recipes_query(api):
     assert res.status == '200 OK'
 
 def test_api_get_recipes_id(api):
-    res = api.get('/recipes/60a3a76b2cbcf9c375520654')
+    res = api.get('/recipes/' + test_meal_id)
     assert res.json["title"] == "Pasta"
     assert res.status == '200 OK'
 
 def test_api_new_favourite(api):
-    mock_data = json.dumps({"recipe_id": "60a3a76b2cbcf9c375520654"})
+    mock_data = json.dumps({"recipe_id": test_meal_id})
     mock_headers = {'Content-Type': 'application/json'}
-    res = api.patch('/user/60a3a76a2cbcf9c375520653/favourites/new', data=mock_data, headers=mock_headers)
+    res = api.patch('/user/' + test_user_id + '/favourites/new', data=mock_data, headers=mock_headers)
     assert "favourites updated" in res.json["message"]
     assert res.status == '201 CREATED'
 
 def test_api_get_favourites(api):
-    res = api.get('/user/60a3a76a2cbcf9c375520653/favourites')
+    res = api.get('/user/' + test_user_id + '/favourites')
     assert res.json[-1]["title"] == "Pasta"
     assert res.status == '200 OK'
 
