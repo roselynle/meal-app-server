@@ -3,11 +3,19 @@ from flask_cors import CORS, cross_origin # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
 import json
+# from pymongo import MongoClient
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+# connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
+# client = MongoClient(connect_string)
+# db = client.get_default_database()
+
+# def get_mongo_connect_string():
+#     return os.environ.get("MONGO_CONNECT_STRING", "")
 
 @app.route('/', methods=['GET'])
 @cross_origin()
@@ -17,7 +25,8 @@ def home():
 @app.route('/recipes/new/', methods=['POST'])
 @cross_origin()
 def new_recipe():
-    new_meal = request.data
+    new_meal = request.data.decode()
+    print(new_meal)
     recipes.add_recipe(new_meal)
     return {'message': "New recipe added"}, 201
 
