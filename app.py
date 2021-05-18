@@ -43,16 +43,19 @@ def get_recipe(recipe_id):
 @app.route('/register', methods=['POST'])
 def register_user():
     new_user = request.data
-    users.create_user(new_user)
-    return {'message': "Registration successful"}, 201
+    user = json.loads(new_user.decode())
+    print(user)
+    success = users.create_user(user)
+    if (success == True):
+        return {'message': "Registration successful"}, 201
+    else:
+        return {'err': "Registration unsuccessful"}, 500
 
 @app.route('/login', methods=['POST'])
 def login_user():
     registered_user = request.data
-    print (registered_user)
     user = json.loads(registered_user.decode())
     success = users.log_in(user)
-    print(success)
     if (success == True):
         return {'message': "Login successful"}, 201
     else:
