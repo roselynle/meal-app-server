@@ -55,6 +55,18 @@ def test_api_get_favourites(api):
     assert res.json[-1]["title"] == "Pasta"
     assert res.status == '200 OK'
 
+def test_api_new_meal_plan(api):
+    mock_data = json.dumps({"meal_plan": [test_meal_id] * 7})
+    mock_headers = {'Content-Type': 'application/json'}
+    res = api.patch('/user/' + test_user_id + '/mealplan/new', data=mock_data, headers=mock_headers)
+    assert "meal plan updated" in res.json["message"]
+    assert res.status == '201 CREATED'
+
+def test_api_get_meal_plan(api):
+    res = api.get('/user/' + test_user_id + '/mealplan')
+    assert res.json[0]["_id"] == test_meal_id
+    assert res.status == '200 OK'
+
 def test_api_404(api):
     res = api.get('/incorrect_route')
     assert 'Error occurred' in res.json['message']

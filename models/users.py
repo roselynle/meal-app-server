@@ -3,7 +3,7 @@ from flask import request, session, flash # type: ignore
 from pymongo import MongoClient  # type: ignore
 import bcrypt # type: ignore
 
-mongoDB_username = 'user'
+mongoDB_username = 'test'
 
 def connect_to_users():
     client = MongoClient(username=mongoDB_username, password='password')
@@ -53,4 +53,4 @@ def get_meal_plan(user_id):
 
 def new_meal_plan(user_id, new_plan):
     users = connect_to_users()
-    users.update_one({'_id': ObjectId(user_id)}, {"meal_plan": new_plan})
+    users.update_one({'_id': ObjectId(user_id)}, {"$set": {"meal_plan": new_plan}})
