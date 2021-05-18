@@ -35,8 +35,12 @@ def log_in(request):
         else:
             flash("Password is incorrect, please try again")  
     else:
-        flash("Username does not exist")  
+        flash("Username does not exist")
+
+def get_favourites(user_id):
+    users = connect_to_users()
+    return users.find_one({'_id': ObjectId(user_id)})["favourites"]
 
 def new_favourite(user_id, recipe_id):
     users = connect_to_users()
-    users.update_one({'_id': ObjectId(user_id)}, {"$push": {"favourites": ObjectId(recipe_id)}})
+    users.update_one({'_id': ObjectId(user_id)}, {"$push": {"favourites": recipe_id}})

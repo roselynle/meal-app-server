@@ -70,12 +70,22 @@ def login_user():
     users.log_in(registered_user)
     return {'message': "Login successful"}, 201
 
+@app.route('/user/<user_id>/favourites', methods=['GET'])
+@cross_origin()
+def get_favourites(user_id):
+    favourites = users.get_favourites(user_id)
+    recipes = []
+    for favourite in favourites:
+        recipe = recipes.get_recipe(favourite)
+        recipes.append({"_id": recipe["_id"], "title": recipe["title"], "description": recipe["description"]})
+    return jsonify(recipes), 201
+
 @app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
 @cross_origin()
-def login_user(user_id):
+def new_favourite(user_id):
     recipe_id = request.data
     users.new_favourite(user_id, recipe_id)
-    return {'message': "Login successful"}, 201
+    return {'message': "favourites updated"}, 204
 
 
 @app.errorhandler(exceptions.NotFound)
