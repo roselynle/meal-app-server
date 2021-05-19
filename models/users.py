@@ -52,6 +52,8 @@ def get_user(user_id):
 
 def get_favourites(user_id):
     users = connect_to_users()
+    print(user_id)
+    print(users.find_one({'_id': ObjectId(user_id)}))
     return users.find_one({'_id': ObjectId(user_id)})["favourites"]
 
 def new_favourite(user_id, recipe_id):

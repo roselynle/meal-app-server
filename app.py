@@ -93,7 +93,7 @@ def get_favourites(user_id):
     meals = []
     for favourite in favourites:
         meal = recipes.get_recipe(favourite)
-        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
+        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"], "image_url": meal["image_url"]})
     return jsonify(meals), 200
 
 @app.route('/user/<user_id>/favourites/new', methods=['PATCH'])
@@ -110,13 +110,13 @@ def get_meal_plan(user_id):
     meals = []
     for meal in plan:
         meal = recipes.get_recipe(meal)
-        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"]})
+        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"], "image_url": meal["image_url"]})
     return jsonify(meals), 200
 
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
 @cross_origin()
 def new_meal_plan(user_id):
-    plan_data = json.loads(request.data.decode())["meal_plan"]
+    plan_data = json.loads(json.loads(request.data.decode())["body"])
     users.new_meal_plan(user_id, plan_data)
     return {'message': "meal plan updated"}, 201
 
