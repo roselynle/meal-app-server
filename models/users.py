@@ -7,7 +7,7 @@ import pdb
 # mongoDB_username = 'user'
 
 def connect_to_users():
-    pdb.set_trace()
+    # pdb.set_trace()
     client = MongoClient("mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodApp?retryWrites=true&w=majority")
     db = client.foodApp
     return db.User
