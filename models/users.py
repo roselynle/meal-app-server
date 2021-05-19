@@ -19,7 +19,6 @@ def create_user(request):
             'email': request['email'],
             'username': request['username'],
             'password': request['password']})
-        # session['username'] =  request['username']
         return True
     else:
         print("user already exists")
@@ -34,9 +33,9 @@ def log_in(request):
     if login_user:
         if (request['password'] == login_user['password']):
             print("password matches")
-            # session['username'] = request.form['username']
             username = login_user['username']
-            return username
+            user_id = login_user['_id']
+            return (username, str(user_id))
         else:
             print("password does not match")
     else:
