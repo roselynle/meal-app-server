@@ -31,11 +31,6 @@ mail = Mail(app)
 @app.route('/', methods=['GET'])
 @cross_origin()
 def home():
-    """message = f"Hey there, come check out Lenny\'s new album!"
-    subject = 'New Release 🔥'
-    msg = Message(recipients=["james.wheadon@yahoo.com"], body=message, sender='CommunityCook', subject=subject)
-    print(msg)
-    mail.send(msg)"""
     return jsonify({'message': 'Hello from Community Cook API!'}), 200
 
 @app.route('/recipes/new/', methods=['POST'])
@@ -68,7 +63,6 @@ def get_recipe(recipe_id):
 def register_user():
     new_user = request.data
     user = json.loads(new_user.decode())
-    print(user)
     success = users.create_user(user)
     if (success == True):
         return {'message': "Registration successful"}, 200
@@ -142,7 +136,6 @@ def get_ingredients(user_id):
         if amount % 1 == 0:
             amount = int(amount)
         ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
-    print(ingredient_list)
     msg = Message("Your Shopping List", sender='PlanEat', recipients = [user["email"]])
     msg.html = render_template('ingredients.html', user_name=user["username"], ingredients=ingredient_list)
     mail.send(msg)
