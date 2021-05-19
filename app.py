@@ -5,7 +5,7 @@ from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
 import json
 import pymongo
-# from pymongo import MongoClient
+from pymongo import MongoClient
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -23,10 +23,12 @@ mail_settings = {
 app.config.update(mail_settings)
 mail = Mail(app)
 
-DATABASE_URL='mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority' # get connection url from environment
+# DATABASE_URL='mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority' # get connection url from environment
 
-client=pymongo.MongoClient(DATABASE_URL)  # establish connection with database
-mongo_db=client.db # assign database to mongo_db
+# client=pymongo.MongoClient(DATABASE_URL)  # establish connection with database
+# mongo_db=client.db # assign database to mongo_db
+
+mongoClient = MongoClient('mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority')
 
 
 @app.route('/', methods=['GET'])
