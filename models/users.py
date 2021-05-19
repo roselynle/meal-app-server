@@ -1,10 +1,12 @@
-from flask import request, session, flash
+from bson.objectid import ObjectId #type: ignore
+from flask import request, session, flash # type: ignore
 from pymongo import MongoClient  # type: ignore
-# import bcrypt
-import json
+# import bcrypt # type: ignore
+
+mongoDB_username = 'user'
 
 def connect_to_users():
-    client = MongoClient(username='user', password='password')
+    client = MongoClient(username=mongoDB_username, password='password')
     db = client.foodApp
     return db.User
 
@@ -18,7 +20,9 @@ def create_user(request):
         users.insert_one({
             'email': request['email'],
             'username': request['username'],
-            'password': request['password']})
+            'password': request['password'],
+            "favourites": [],
+            "meal_plan": []})
         return True
     else:
         print("user already exists")
@@ -38,5 +42,26 @@ def log_in(request):
         else:
             print("password does not match")
     else:
+        flash("Username does not exist")
         print("Username does not exist")  
     return False
+
+def get_user(user_id):
+    users = connect_to_users()
+    return users.find_one({'_id': ObjectId(user_id)})
+
+def get_favourites(user_id):
+    users = connect_to_users()
+    return users.find_one({'_id': ObjectId(user_id)})["favourites"]
+
+def new_favourite(user_id, recipe_id):
+    users = connect_to_users()
+    users.update_one({'_id': ObjectId(user_id)}, {"$push": {"favourites": recipe_id}})
+
+def get_meal_plan(user_id):
+    users = connect_to_users()
+    return users.find_one({'_id': ObjectId(user_id)})["meal_plan"]
+
+def new_meal_plan(user_id, new_plan):
+    users = connect_to_users()
+    users.update_one({'_id': ObjectId(user_id)}, {"$set": {"meal_plan": new_plan}})

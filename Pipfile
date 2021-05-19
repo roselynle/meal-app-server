@@ -9,6 +9,7 @@ gunicorn = "*"
 flask-cors = "*"
 pymongo = {extras = ["srv"], version = "*"}
 bcrypt = "*"
+flask-mail = "*"
 
 [dev-packages]
 pytest = "*"
