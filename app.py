@@ -116,7 +116,7 @@ def get_meal_plan(user_id):
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
 @cross_origin()
 def new_meal_plan(user_id):
-    plan_data = json.loads(request.data.decode())["meal_plan"]
+    plan_data = json.loads(json.loads(request.data.decode())["body"])
     users.new_meal_plan(user_id, plan_data)
     return {'message': "meal plan updated"}, 201
 
