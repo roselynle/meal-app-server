@@ -4,6 +4,7 @@ from flask_mail import Message, Mail # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
 import json
+# from pymongo import MongoClient
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -66,15 +67,24 @@ def get_recipe(recipe_id):
 @cross_origin()
 def register_user():
     new_user = request.data
-    users.create_user(new_user)
-    return {'message': "Registration successful"}, 201
+    user = json.loads(new_user.decode())
+    print(user)
+    success = users.create_user(user)
+    if (success == True):
+        return {'message': "Registration successful"}, 200
+    else:
+        return {'err': "Registration unsuccessful"}, 500
 
 @app.route('/login', methods=['POST'])
 @cross_origin()
 def login_user():
     registered_user = request.data
-    users.log_in(registered_user)
-    return {'message': "Login successful"}, 201
+    user = json.loads(registered_user.decode())
+    success = users.log_in(user)
+    if success:
+        return jsonify(success), 200
+    else:
+        return {'err': "Login unsuccessful"}, 500
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
 @cross_origin()
