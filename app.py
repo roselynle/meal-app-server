@@ -28,7 +28,9 @@ mail = Mail(app)
 # client=pymongo.MongoClient(DATABASE_URL)  # establish connection with database
 # mongo_db=client.db # assign database to mongo_db
 
-mongoClient = MongoClient('mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority')
+connect_string = 'mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority'
+client = MongoClient(connect_string)
+db = client.get_default_database()
 
 
 @app.route('/', methods=['GET'])
