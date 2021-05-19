@@ -1,15 +1,17 @@
 from bson.objectid import ObjectId #type: ignore
 from pymongo import MongoClient # type: ignore
-import json
+import json, pdb
 
-mongoDB_username = 'user'
+# mongoDB_username = 'user'
 
 def connect_to_meals():
-    client = MongoClient(username=mongoDB_username, password='password')
+    # pdb.set_trace()
+    client = MongoClient("mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodApp?retryWrites=true&w=majority")
     db = client.foodApp
     return db.Meal
 
 def add_recipe(recipe):
+    # pdb.set_trace()
     recipes = connect_to_meals()
     recipe = json.loads(recipe)
 
