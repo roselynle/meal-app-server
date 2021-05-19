@@ -4,6 +4,7 @@ from flask_mail import Message, Mail # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
 import json
+import pymongo
 # from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -21,12 +22,12 @@ mail_settings = {
 
 app.config.update(mail_settings)
 mail = Mail(app)
-# connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
-# client = MongoClient(connect_string)
-# db = client.get_default_database()
 
-# def get_mongo_connect_string():
-#     return os.environ.get("MONGO_CONNECT_STRING", "")
+DATABASE_URL='mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority' # get connection url from environment
+
+client=pymongo.MongoClient(DATABASE_URL)  # establish connection with database
+mongo_db=client.db # assign database to mongo_db
+
 
 @app.route('/', methods=['GET'])
 @cross_origin()
