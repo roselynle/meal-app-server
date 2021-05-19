@@ -150,11 +150,11 @@ def get_ingredients(user_id):
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
-    return {'message': f'Error occurred: {err}'}, 404
+    return {'err': f'Error occurred: {err}'}, 404
 
 @app.errorhandler(exceptions.InternalServerError)
 def handle_500(err):
-    return {'message': f'Error occurred: {err}'}, 500
+    return {'err': f'Error occurred: {err}'}, 500
 
 if __name__ == "__main__":
     app.run(debug=True)
