@@ -56,7 +56,7 @@ def register_user():
     print(user)
     success = users.create_user(user)
     if (success == True):
-        return {'message': "Registration successful"}, 201
+        return {'message': "Registration successful"}, 200
     else:
         return {'err': "Registration unsuccessful"}, 500
 
@@ -65,9 +65,8 @@ def login_user():
     registered_user = request.data
     user = json.loads(registered_user.decode())
     success = users.log_in(user)
-    print(success)
     if success:
-        return jsonify(success), 201
+        return jsonify(success), 200
     else:
         return {'err': "Login unsuccessful"}, 500
 
