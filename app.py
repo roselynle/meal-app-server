@@ -65,7 +65,6 @@ def login_user():
     registered_user = request.data
     user = json.loads(registered_user.decode())
     success = users.log_in(user)
-    print(success)
     if success:
         return jsonify(success), 200
     else:
