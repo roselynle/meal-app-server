@@ -97,6 +97,13 @@ def new_favourite(user_id):
     users.new_favourite(user_id, recipe_id)
     return {'message': "favourites updated"}, 201
 
+@app.route('/user/<user_id>/favourites/delete', methods=['DELETE'])
+@cross_origin()
+def delete_favourite(user_id):
+    recipe_id = json.loads(request.data.decode())["recipe_id"]
+    users.delete_favourite(user_id, recipe_id)
+    return {'message': "favourites updated"}, 200
+
 @app.route('/user/<user_id>/mealplan', methods=['GET'])
 @cross_origin()
 def get_meal_plan(user_id):
