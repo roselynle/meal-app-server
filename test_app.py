@@ -56,7 +56,7 @@ def test_api_get_favourites(api):
     assert res.status == '200 OK'
 
 def test_api_new_meal_plan(api):
-    mock_data = json.dumps({"body": json.dumps([test_meal_id] * 7)})
+    mock_data = json.dumps({"body": json.dumps({"day1": {"_id": test_meal_id}})})
     mock_headers = {'Content-Type': 'application/json'}
     res = api.patch('/user/' + test_user_id + '/mealplan/new', data=mock_data, headers=mock_headers)
     assert "meal plan updated" in res.json["message"]
@@ -64,7 +64,7 @@ def test_api_new_meal_plan(api):
 
 def test_api_get_meal_plan(api):
     res = api.get('/user/' + test_user_id + '/mealplan')
-    assert res.json[0]["_id"] == test_meal_id
+    assert res.json["day1"]["_id"] == test_meal_id
     assert res.status == '200 OK'
 
 def test_api_404(api):
