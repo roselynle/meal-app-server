@@ -130,15 +130,21 @@ def get_ingredients(user_id):
             try:
                 meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = float(ingredient["amount"])
             except:
-                meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = ingredient["amount"]
+                meal_ingredients[ingredient["ingredient"]] = 0
         ingredients = {ingredient: ingredients.get(ingredient, 0) + meal_ingredients.get(ingredient, 0) for ingredient in set(ingredients) | set(meal_ingredients)}
     sorted_ingredients = sorted(ingredients.keys(), key=lambda x:x.lower())
     ingredient_list = []
     for i in sorted_ingredients:
         amount = ingredients[i]
-        if amount % 1 == 0:
-            amount = int(amount)
-        ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
+        if amount:
+            if amount % 1 == 0:
+                amount = int(amount)
+        else:
+            amount = ""
+        try:
+            ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
+        except:
+            ingredient_list.append(f"{i}")
     msg = Message("Your Shopping List", sender='PlanEat', recipients = [user["email"]])
     msg.html = render_template('ingredients.html', user_name=user["username"], ingredients=ingredient_list)
     mail.send(msg)
