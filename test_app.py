@@ -2,12 +2,12 @@ from pymongo import MongoClient # type: ignore
 import json
 
 def connect_to_meals():
-    client = MongoClient(username="test", password='password')
+    client = MongoClient(username="user", password='password')
     db = client.foodApp
     return db.Meal
 
 def connect_to_users():
-    client = MongoClient(username="test", password='password')
+    client = MongoClient(username="user", password='password')
     db = client.foodApp
     return db.User
 
@@ -20,7 +20,7 @@ def test_api_get_home(api):
     assert res.status == '200 OK'
 
 def test_api_new_recipe(api):
-    mock_data = json.dumps({"Instructions": "", "dietary-req": [{"Vegan": True}, {"Vegetarian": True}, {"Pescatarian": False}, {"Gluten-free": False}, {"Dairy-free": False}, {"Nut-free": True}], "ingredients": [], "recipeDescription": "test", "recipeName": "test pasta"})
+    mock_data = json.dumps({"instructions": "", "dietary-req": [{"Vegan": True}, {"Vegetarian": True}, {"Pescatarian": False}, {"Gluten-free": False}, {"Dairy-free": False}, {"Nut-free": True}], "ingredients": [], "recipeDescription": "test", "recipeName": "test pasta", "image_url": ""})
     mock_headers = {'Content-Type': 'application/json'}
     res = api.post('/recipes/new/', data=mock_data, headers=mock_headers)
     assert res.status == '201 CREATED'
@@ -56,7 +56,7 @@ def test_api_get_favourites(api):
     assert res.status == '200 OK'
 
 def test_api_new_meal_plan(api):
-    mock_data = json.dumps({"meal_plan": [test_meal_id] * 7})
+    mock_data = json.dumps({"body": json.dumps([test_meal_id] * 7)})
     mock_headers = {'Content-Type': 'application/json'}
     res = api.patch('/user/' + test_user_id + '/mealplan/new', data=mock_data, headers=mock_headers)
     assert "meal plan updated" in res.json["message"]

@@ -31,11 +31,6 @@ mail = Mail(app)
 @app.route('/', methods=['GET'])
 @cross_origin()
 def home():
-    """message = f"Hey there, come check out Lenny\'s new album!"
-    subject = 'New Release 🔥'
-    msg = Message(recipients=["james.wheadon@yahoo.com"], body=message, sender='CommunityCook', subject=subject)
-    print(msg)
-    mail.send(msg)"""
     return jsonify({'message': 'Hello from Community Cook API!'}), 200
 
 @app.route('/recipes/new/', methods=['POST'])
@@ -68,7 +63,6 @@ def get_recipe(recipe_id):
 def register_user():
     new_user = request.data
     user = json.loads(new_user.decode())
-    print(user)
     success = users.create_user(user)
     if (success == True):
         return {'message': "Registration successful"}, 200
@@ -103,15 +97,18 @@ def new_favourite(user_id):
     users.new_favourite(user_id, recipe_id)
     return {'message': "favourites updated"}, 201
 
+@app.route('/user/<user_id>/favourites/delete', methods=['DELETE'])
+@cross_origin()
+def delete_favourite(user_id):
+    recipe_id = json.loads(request.data.decode())["recipe_id"]
+    users.delete_favourite(user_id, recipe_id)
+    return {'message': "favourites updated"}, 200
+
 @app.route('/user/<user_id>/mealplan', methods=['GET'])
 @cross_origin()
 def get_meal_plan(user_id):
     plan = users.get_meal_plan(user_id)
-    meals = []
-    for meal in plan:
-        meal = recipes.get_recipe(meal)
-        meals.append({"_id": meal["_id"], "title": meal["title"], "description": meal["description"], "image_url": meal["image_url"]})
-    return jsonify(meals), 200
+    return jsonify(plan), 200
 
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
 @cross_origin()
@@ -126,8 +123,8 @@ def get_ingredients(user_id):
     plan = users.get_meal_plan(user_id)
     user = users.get_user(user_id)
     ingredients = {}
-    for meal in plan:
-        meal = recipes.get_recipe(meal)
+    for day, meal in plan.items():
+        meal = recipes.get_recipe(meal["_id"])
         meal_ingredients = {}
         for ingredient in meal["ingredients"]:
             try:
@@ -142,7 +139,6 @@ def get_ingredients(user_id):
         if amount % 1 == 0:
             amount = int(amount)
         ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
-    print(ingredient_list)
     msg = Message("Your Shopping List", sender='PlanEat', recipients = [user["email"]])
     msg.html = render_template('ingredients.html', user_name=user["username"], ingredients=ingredient_list)
     mail.send(msg)
