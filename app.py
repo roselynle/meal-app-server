@@ -108,6 +108,7 @@ def delete_favourite(user_id):
 @cross_origin()
 def get_meal_plan(user_id):
     plan = users.get_meal_plan(user_id)
+    print(plan)
     return jsonify(plan), 200
 
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
@@ -128,17 +129,29 @@ def get_ingredients(user_id):
         meal_ingredients = {}
         for ingredient in meal["ingredients"]:
             try:
-                meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = float(ingredient["amount"])
+                if ingredient["measure"] and ingredient["measure"] != "null":
+                    meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = float(ingredient["amount"])
+                else:
+                    meal_ingredients[ingredient["ingredient"]] = float(ingredient["amount"])
             except:
-                meal_ingredients[ingredient["ingredient"] + ':' + ingredient["measure"]] = ingredient["amount"]
+                meal_ingredients[ingredient["ingredient"]] = 0
         ingredients = {ingredient: ingredients.get(ingredient, 0) + meal_ingredients.get(ingredient, 0) for ingredient in set(ingredients) | set(meal_ingredients)}
     sorted_ingredients = sorted(ingredients.keys(), key=lambda x:x.lower())
     ingredient_list = []
     for i in sorted_ingredients:
         amount = ingredients[i]
-        if amount % 1 == 0:
-            amount = int(amount)
-        ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
+        if amount:
+            if amount % 1 == 0:
+                amount = int(amount)
+        else:
+            amount = ""
+        if ':' in i:
+            ingredient_list.append(f"{i.split(':')[0]}: {amount}{i.split(':')[1]}")
+        else:
+            if amount:
+                ingredient_list.append(f"{i}: {amount}")
+            else:
+                ingredient_list.append(f"{i}")
     msg = Message("Your Shopping List", sender='PlanEat', recipients = [user["email"]])
     msg.html = render_template('ingredients.html', user_name=user["username"], ingredients=ingredient_list)
     mail.send(msg)
