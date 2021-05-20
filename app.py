@@ -101,11 +101,7 @@ def new_favourite(user_id):
 @cross_origin()
 def get_meal_plan(user_id):
     plan = users.get_meal_plan(user_id)
-    meals = {}
-    for day, meal in plan.items():
-        meal = recipes.get_recipe(meal)
-        meals[day] = {"_id": meal["_id"], "title": meal["title"], "description": meal["description"], "image_url": meal["image_url"]}
-    return jsonify(meals), 200
+    return jsonify(plan), 200
 
 @app.route('/user/<user_id>/mealplan/new', methods=['PATCH'])
 @cross_origin()
@@ -121,7 +117,7 @@ def get_ingredients(user_id):
     user = users.get_user(user_id)
     ingredients = {}
     for day, meal in plan.items():
-        meal = recipes.get_recipe(meal)
+        meal = recipes.get_recipe(meal["_id"])
         meal_ingredients = {}
         for ingredient in meal["ingredients"]:
             try:
