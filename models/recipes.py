@@ -5,7 +5,6 @@ import json, pdb
 # mongoDB_username = 'user'
 
 def connect_to_meals():
-    # pdb.set_trace()
     client = MongoClient("mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodApp?retryWrites=true&w=majority")
     db = client.foodApp
     return db.Meal
