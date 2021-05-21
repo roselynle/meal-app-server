@@ -1,12 +1,12 @@
 from bson.objectid import ObjectId #type: ignore
 from flask import request, session, flash # type: ignore
 from pymongo import MongoClient  # type: ignore
-# import bcrypt # type: ignore
+import bcrypt # type: ignore
 
 mongoDB_username = 'user'
 
 def connect_to_users():
-    client = MongoClient(username=mongoDB_username, password='password')
+    client = MongoClient("mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodApp?retryWrites=true&w=majority")
     db = client.foodApp
     return db.User
 
@@ -16,11 +16,11 @@ def create_user(request):
     print(existing_user)
     if existing_user is None:
         print("there is no user with that username")
-        # hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt(14))
+        hashpass = bcrypt.hashpw(request['password'].encode('utf-8'), bcrypt.gensalt(14))
         users.insert_one({
             'email': request['email'],
             'username': request['username'],
-            'password': request['password'],
+            'password': hashpass,
             "favourites": [],
             "meal_plan": []})
         return True
@@ -34,7 +34,7 @@ def log_in(request):
     login_user = users.find_one({'username': request['username']})
     print(login_user)
     if login_user:
-        if (request['password'] == login_user['password']):
+        if bcrypt.checkpw(request['password'].encode('utf-8'), login_user['password']):
             print("password matches")
             username = login_user['username']
             user_id = login_user['_id']
