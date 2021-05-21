@@ -8,8 +8,8 @@ flask = "*"
 gunicorn = "*"
 flask-cors = "*"
 pymongo = {extras = ["srv"], version = "*"}
-bcrypt = "*"
 flask-mail = "*"
+dnspython = "*"
 
 [dev-packages]
 pytest = "*"

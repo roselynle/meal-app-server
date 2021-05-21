@@ -4,7 +4,13 @@ from flask_mail import Message, Mail # type: ignore
 from werkzeug import exceptions # type: ignore
 from models import recipes, users #type: ignore
 import json
+# import pymongo
 # from pymongo import MongoClient
+
+# DATABASE_URL='mongodb+srv://user:foodpassword@cluster0.xxngz.mongodb.net/foodDatabase?retryWrites=true&w=majority' # get connection url from environment
+
+# client=pymongo.MongoClient(DATABASE_URL)  # establish connection with database
+# mongo_db=client.test # assign database to mongo_db
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -21,12 +27,6 @@ mail_settings = {
 
 app.config.update(mail_settings)
 mail = Mail(app)
-# connect_string = 'mongodb+srv://user:foodpassword@cluster0.q17xw.mongodb.net/foodApp?retryWrites=true&w=majority'
-# client = MongoClient(connect_string)
-# db = client.get_default_database()
-
-# def get_mongo_connect_string():
-#     return os.environ.get("MONGO_CONNECT_STRING", "")
 
 @app.route('/', methods=['GET'])
 @cross_origin()
@@ -159,11 +159,11 @@ def get_ingredients(user_id):
 
 @app.errorhandler(exceptions.NotFound)
 def handle_404(err):
-    return {'message': f'Error occurred: {err}'}, 404
+    return {'err': f'Error occurred: {err}'}, 404
 
 @app.errorhandler(exceptions.InternalServerError)
 def handle_500(err):
-    return {'message': f'Error occurred: {err}'}, 500
+    return {'err': f'Error occurred: {err}'}, 500
 
 if __name__ == "__main__":
     app.run(debug=True)
